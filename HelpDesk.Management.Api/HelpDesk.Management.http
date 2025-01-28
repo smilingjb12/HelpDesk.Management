@@ -1,0 +1,35 @@
+@HelpDesk.Management_HostAddress = http://localhost:8080
+
+### Create new incident
+POST {{HelpDesk.Management_HostAddress}}/api/v1/incidents
+Content-Type: application/json
+
+{
+    "title": "Sample Incident",
+    "description": "This is a test incident"
+}
+
+### Get incident by ID
+GET {{HelpDesk.Management_HostAddress}}/api/v1/incidents/{{incidentId}}
+Accept: application/json
+
+### Assign incident
+POST {{HelpDesk.Management_HostAddress}}/api/v1/incidents/{{incidentId}}/assign
+Content-Type: application/json
+
+{
+    "assigneeId": "00000000-0000-0000-0000-000000000000"
+}
+
+### Add comment to incident
+POST {{HelpDesk.Management_HostAddress}}/api/v1/incidents/{{incidentId}}/comments
+Content-Type: application/json
+
+{
+    "content": "This is a test comment"
+}
+
+### Get all incidents
+GET {{HelpDesk.Management_HostAddress}}/api/v1/incidents
+Accept: application/json
+
