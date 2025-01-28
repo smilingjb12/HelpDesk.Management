@@ -21,9 +21,6 @@ public class IncidentsController : ControllerBase
     }
 
     [HttpPost]
-    [SwaggerOperation(Summary = "Logs a new incident", Description = "Creates and logs a new incident in the system.")]
-    [SwaggerResponse(StatusCodes.Status201Created, "Incident successfully logged.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid input data.")]
     public async Task<IActionResult> LogIncident(LogIncidentCommand command)
     {
         var result = await _mediator.Send(command);
