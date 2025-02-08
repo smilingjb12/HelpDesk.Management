@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using HelpDesk.Management.Domain.Incidents.Validation;
 
 namespace HelpDesk.Management.Domain.Incidents.Aggregates;
 
@@ -29,7 +30,7 @@ public partial class Incident
         };
     }
 
-    public Result<IDomainEvent> Assign(string assignedTo, string assignedBy)
+    public async Task<Result<IDomainEvent>> Assign(string assignedTo, IIncidentValidator validator)
     {
         if (Status == IncidentStatus.Closed)
         {
@@ -39,6 +40,12 @@ public partial class Incident
         if (assignedTo == AssignedTo)
         {
             return Result.Fail("Cannot assign to same user");
+        }
+
+        var validationResult = await validator.CheckNotAssignedToIncidentAlready(assignedTo);
+        if (validationResult.IsFailed)
+        {
+            return Result.Fail(validationResult.Errors);
         }
 
         return Result.Ok(new IncidentAssigned(Id, assignedTo, DateTime.UtcNow) as IDomainEvent);

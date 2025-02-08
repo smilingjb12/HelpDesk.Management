@@ -3,6 +3,7 @@ using FluentValidation;
 using HelpDesk.Management.Application.Authentication;
 using HelpDesk.Management.Domain.Incidents;
 using HelpDesk.Management.Domain.Incidents.Aggregates;
+using HelpDesk.Management.Domain.Incidents.Validation;
 using Marten;
 using MediatR;
 
@@ -26,11 +27,16 @@ public class AssignIncidentCommandHandler : IRequestHandler<AssignIncidentComman
 {
     private readonly IDocumentStore _store;
     private readonly ICurrentUserProvider _currentUserProvider;
+    private readonly IIncidentValidator _validator;
 
-    public AssignIncidentCommandHandler(IDocumentStore store, ICurrentUserProvider currentUserProvider)
+    public AssignIncidentCommandHandler(
+        IDocumentStore store,
+        ICurrentUserProvider currentUserProvider,
+        IIncidentValidator validator)
     {
         _store = store;
         _currentUserProvider = currentUserProvider;
+        _validator = validator;
     }
 
     public async Task<Result> Handle(AssignIncidentCommand command, CancellationToken ct)
@@ -38,7 +44,7 @@ public class AssignIncidentCommandHandler : IRequestHandler<AssignIncidentComman
         using var session = _store.LightweightSession();
         var incident = await session.Events.AggregateStreamAsync<Incident>(command.IncidentId, token: ct);
 
-        var result = incident.Assign(command.AssignedTo, _currentUserProvider.UserId);
+        var result = await incident.Assign(command.AssignedTo, _validator);
         if (result.IsFailed)
         {
             return Result.Fail(result.Errors);
