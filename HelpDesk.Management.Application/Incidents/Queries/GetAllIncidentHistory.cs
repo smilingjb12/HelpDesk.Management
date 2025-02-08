@@ -7,11 +7,11 @@ namespace HelpDesk.Management.Application.Incidents.Queries;
 
 public record GetAllIncidentHistory : IRequest<Result<IReadOnlyList<IncidentHistoryEntry>>>;
 
-public class GetAllIncidentsQueryHandler : IRequestHandler<GetAllIncidentHistory, Result<IReadOnlyList<IncidentHistoryEntry>>>
+public class GetAllIncidentHistoryQueryHandler : IRequestHandler<GetAllIncidentHistory, Result<IReadOnlyList<IncidentHistoryEntry>>>
 {
     private readonly IDocumentStore _store;
 
-    public GetAllIncidentsQueryHandler(IDocumentStore store)
+    public GetAllIncidentHistoryQueryHandler(IDocumentStore store)
     {
         _store = store;
     }

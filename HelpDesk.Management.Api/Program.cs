@@ -3,7 +3,10 @@ using FluentValidation;
 using HelpDesk.Management.Application.Authentication;
 using HelpDesk.Management.Application.Incidents.Commands;
 using HelpDesk.Management.Application.Incidents.Projections;
+using HelpDesk.Management.Domain.Incidents;
+using HelpDesk.Management.Domain.Incidents.Validation;
 using HelpDesk.Management.Infrastructure.Authentication;
+using HelpDesk.Management.Infrastructure.Incidents;
 using Marten;
 using System.Diagnostics;
 
@@ -47,6 +50,8 @@ builder.Services.AddApiVersioning(options =>
 // Add these services
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+builder.Services.AddScoped<IIncidentValidator, IncidentValidator>();
+builder.Services.AddScoped<IIncidentRepository, DocumentStoreIncidentRepository>();
 
 // Add health checks
 builder.Services.AddHealthChecks();

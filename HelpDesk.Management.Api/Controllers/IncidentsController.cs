@@ -62,10 +62,20 @@ public class IncidentsController : ControllerBase
             : BadRequest(result.Errors);
     }
 
+    [HttpGet("history")]
+    public async Task<IActionResult> GetAllIncidentHistory()
+    {
+        var result = await _mediator.Send(new GetAllIncidentHistory());
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : BadRequest(result.Errors);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAllIncidents()
     {
-        var result = await _mediator.Send(new GetAllIncidentHistory());
+        var result = await _mediator.Send(new GetAllIncidentsQuery());
 
         return result.IsSuccess
             ? Ok(result.Value)
